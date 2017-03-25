@@ -14,7 +14,7 @@ var paths = {
     bowerSrc: 'bower_components'
 };
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['watch', 'copyAndInjectAll']);
 
 
 
@@ -27,7 +27,6 @@ gulp.task('watch', ['serve'], function() {
 gulp.task('serve', function() {
     gulp.src(paths.temp)
         .pipe(webServer({
-            livereload: true,
             proxies: [{
                 source: '/api',
                 target: 'http://localhost:1337'
@@ -40,6 +39,7 @@ gulp.task('copyAndInjectAll', function() {
     var appFiles = gulp.src(paths.appSrc).pipe(gulp.dest(paths.temp));
 
     return gulp.src(paths.index)
+        .pipe(gulp.dest(paths.temp))
         .pipe(inject(tempVendors, {
             relative: true,
             name: 'vendorInject'

@@ -59,8 +59,7 @@ module.exports = {
                     oauth: profileOauth,
                     json: true
                 }, function(err, response, profile) {
-
-                    // Step 5a. Link user accounts.
+                    // // Step 5a. Link user accounts.
                     if (req.header('Authorization')) {
                         User.findOne({ twitter: profile.id }, function(err, existingUser) {
                             if (existingUser) {
@@ -78,7 +77,8 @@ module.exports = {
                                 user.twitter = profile.id;
                                 user.email = profile.email;
                                 user.displayName = user.displayName || profile.name;
-                                user.picture = user.picture || profile.profile_image_url_https.replace('_normal', '');
+                                user.twitterToken = profile.oauth_token;
+                                user.twitterSecret = profile.oauth_secret;
                                 user.save(function(err) {
                                     res.send({ token: createJWT(user) });
                                 });
@@ -90,10 +90,11 @@ module.exports = {
                             if (existingUser) {
                                 return res.send({ token: createJWT(existingUser) });
                             }
-
                             User.create({
-                                twitter: profile.user_id,
-                                displayName: profile.screen_name
+                                twitter: profile.id,
+                                displayName: profile.name,
+                                twitterToken: profileOauth.token,
+                                twitterSecret: profileOauth.token_secret
                             }).exec(function(err, user) {
                                 res.send({ token: createJWT(user) });
                             });

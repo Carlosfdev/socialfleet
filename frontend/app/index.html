@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="app">
+
 <head>
     <title>My index</title>
     <!-- vendorInject:css -->
@@ -8,14 +9,40 @@
     <!-- inject:css -->
     <!-- endinject -->
 </head>
-<body ng-controller="Login">
-Hi!
 
-    <button ng-click="login()">LogIn</button>
+<body ng-controller="Login">
+    <nav class="navbar navbar-default">
+        <button class="btn btn-link navbar-btn pull-right" ng-show="isAuthenticated()" ng-click="logout()">LogOut</button>
+    </nav>
+
+    <div class="container">
+        <button class="btn btn-primary" ng-hide="isAuthenticated()" ng-click="login()">LogIn</button>
+
+        <div class="col-sm-8 col-md-6 col-md-offset-3 col-sm-offset-2">
+            <div ng-controller="Scheduler" class="well clearfix">
+                <div class="form-group">
+                    <textarea rows="4" class="form-control" ng-model="message" placeholder="tweet message"></textarea>
+                </div>
+
+                <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" is-open="opened" min-date="minDate" ng-model="date">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                </p>
+
+                <div uib-timepicker ng-model="time"></div>
+
+                <button class="btn btn-default pull-right" ng-click="tweet()" ng-disabled="!date">Tweet</button>
+            </div>
+            <div ng-include="'myposts.html'"></div>
+        </div>
+    </div>
     <!-- vendorInject:js -->
     <!-- endinject -->
 
     <!-- inject:js -->
     <!-- endinject -->
 </body>
+
 </html>
